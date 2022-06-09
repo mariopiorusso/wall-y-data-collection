@@ -204,7 +204,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/wall-y-data-collection/dev/1651660738635-2022-05-04T10:38:58.635Z/wall-y-data-collection.zip"
+                "S3Key": "serverless/wall-y-data-collection/dev/1654601636500-2022-06-07T11:33:56.500Z/wall-y-data-collection.zip"
               },
               "Handler": "handler.data_collector",
               "Runtime": "python3.6",
@@ -222,37 +222,76 @@
               "DataUnderscorecollectorLogGroup"
             ]
           },
-          "DataUnderscorecollectorLambdaVersionEEAQQcNun7DOaCbIuNZ90w01zhYxdL5y6gWgTQ3T4": {
+          "DataUnderscorecollectorLambdaVersionzUkadXtasL7tzm3pWVhShHfTwByM2EI5bz480VU6Wg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DataUnderscorecollectorLambdaFunction"
               },
-              "CodeSha256": "KYqjEs/BzS6hZ8l/Y5WN1tTMLtbPCJLoxfkTru+ALZQ="
+              "CodeSha256": "F75sIUIWYK8wwDMxz7volxpSGpFhFwqDu4PklaRrtUc="
+            }
+          },
+          "DataUnderscorecollectorEventsRuleSchedule1": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+              "ScheduleExpression": "cron(00 06 ? * 2-5 *)",
+              "State": "ENABLED",
+              "Name": "daily-collection",
+              "Description": "Daily data collection from data source",
+              "Targets": [
+                {
+                  "Arn": {
+                    "Fn::GetAtt": [
+                      "DataUnderscorecollectorLambdaFunction",
+                      "Arn"
+                    ]
+                  },
+                  "Id": "data_collectorSchedule"
+                }
+              ]
+            }
+          },
+          "DataUnderscorecollectorLambdaPermissionEventsRuleSchedule1": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DataUnderscorecollectorLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "events.amazonaws.com",
+              "SourceArn": {
+                "Fn::GetAtt": [
+                  "DataUnderscorecollectorEventsRuleSchedule1",
+                  "Arn"
+                ]
+              }
             }
           },
           "financialDataItems": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "financialDataItems",
+              "TableName": "financialData",
               "AttributeDefinitions": [
                 {
-                  "AttributeName": "market#ticker",
+                  "AttributeName": "market_ticker",
                   "AttributeType": "S"
                 },
                 {
-                  "AttributeName": "frequence#timestamp",
+                  "AttributeName": "frequence_timestamp",
                   "AttributeType": "S"
                 }
               ],
               "KeySchema": [
                 {
-                  "AttributeName": "market#ticker",
+                  "AttributeName": "market_ticker",
                   "KeyType": "HASH"
                 },
                 {
-                  "AttributeName": "frequence#timestamp",
+                  "AttributeName": "frequence_timestamp",
                   "KeyType": "RANGE"
                 }
               ],
@@ -272,7 +311,7 @@
           "DataUnderscorecollectorLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DataUnderscorecollectorLambdaVersionEEAQQcNun7DOaCbIuNZ90w01zhYxdL5y6gWgTQ3T4"
+              "Ref": "DataUnderscorecollectorLambdaVersionzUkadXtasL7tzm3pWVhShHfTwByM2EI5bz480VU6Wg"
             }
           }
         }
@@ -373,14 +412,23 @@
     "functions": {
       "data_collector": {
         "handler": "handler.data_collector",
-        "events": [],
+        "events": [
+          {
+            "schedule": {
+              "rate": "cron(00 06 ? * 2-5 *)",
+              "enabled": true,
+              "name": "daily-collection",
+              "description": "Daily data collection from data source"
+            }
+          }
+        ],
         "name": "wall-y-data-collection-dev-data_collector",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "runtime": "python3.6",
         "vpc": {},
-        "versionLogicalId": "DataUnderscorecollectorLambdaVersionEEAQQcNun7DOaCbIuNZ90w01zhYxdL5y6gWgTQ3T4"
+        "versionLogicalId": "DataUnderscorecollectorLambdaVersionzUkadXtasL7tzm3pWVhShHfTwByM2EI5bz480VU6Wg"
       }
     },
     "resources": {
@@ -388,24 +436,24 @@
         "financialDataItems": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "financialDataItems",
+            "TableName": "financialData",
             "AttributeDefinitions": [
               {
-                "AttributeName": "market#ticker",
+                "AttributeName": "market_ticker",
                 "AttributeType": "S"
               },
               {
-                "AttributeName": "frequence#timestamp",
+                "AttributeName": "frequence_timestamp",
                 "AttributeType": "S"
               }
             ],
             "KeySchema": [
               {
-                "AttributeName": "market#ticker",
+                "AttributeName": "market_ticker",
                 "KeyType": "HASH"
               },
               {
-                "AttributeName": "frequence#timestamp",
+                "AttributeName": "frequence_timestamp",
                 "KeyType": "RANGE"
               }
             ],
@@ -446,14 +494,14 @@
           "venv/**"
         ],
         "artifact": "/home/ANT.AMAZON.COM/rusmario/Desktop/wall-y/wall-y-data-collection/.serverless/wall-y-data-collection.zip",
-        "artifactDirectoryName": "serverless/wall-y-data-collection/dev/1651660738635-2022-05-04T10:38:58.635Z"
+        "artifactDirectoryName": "serverless/wall-y-data-collection/dev/1654601636500-2022-06-07T11:33:56.500Z"
       }
     },
     "isDashboardMonitoringPreconfigured": false,
     "artifact": "/home/ANT.AMAZON.COM/rusmario/Desktop/wall-y/wall-y-data-collection/.serverless/wall-y-data-collection.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/wall-y-data-collection/dev/1651660738635-2022-05-04T10:38:58.635Z",
+    "artifactDirectoryName": "serverless/wall-y-data-collection/dev/1654601636500-2022-06-07T11:33:56.500Z",
     "artifact": "wall-y-data-collection.zip"
   }
 }

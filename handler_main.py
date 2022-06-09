@@ -332,4 +332,20 @@ def main1(event, context):
 
 
 if __name__ == "__main__":
-    main('', '')
+    test = [
+        {'market#ticker': {'S': 'Italia#XMIL#A2A.XMIL'}, 'frequence#timestamp': {'S': 'DAY#2022-05-16T00:00:00+0000'}, 'name': {'S': 'A2A'}, 'open': {'N': '1.64'}, 'close': {'N': '1.671'}, 'high': {'N': '1.6795'}, 'low': {'N': '1.63'}, 'volume': {'N': '7908898.0'}, 'mfi_14': {'N': '49.1963'}, 'rfi_14': {'N': '56.3155'}, 'w_14': {'N': '-28.5714'}, 'atr_14': {'N': '0.0412'}, 'adx_14': {'N': '14.8522'}, 'adx_pos_14': {'N': '26.0779'}, 'adx_neg_14': {'N': '19.3957'}, 'zatrm_14': {'N': '0.9753'}, 'atrm': {'N': '0.9753'}, 'eva': {'N': '57.5252'}, 'wally_index_14': {'N': '42.4748'}, 'sx': {'N': '30.6316'}, 'dix': {'N': '-1'}, 'vor': {'N': '1.0149'}}, 
+        {'market#ticker': {'S': 'USA#XNYS#ABT-1'}, 'frequence#timestamp': {'S': 'DAY#2022-05-16T00:00:00+0000'}, 'name': {'S': 'ABBOTT'}, 'open': {'N': '109.4'}, 'close': {'N': '109.71'}, 'high': {'N': '110.5194'}, 'low': {'N': '107.81'}, 'volume': {'N': '7451946.0'}, 'mfi_14': {'N': '35.96'}, 'rfi_14': {'N': '40.4362'}, 'w_14': {'N': '-63.9972'}, 'atr_14': {'N': '3.2009'}, 'adx_14': {'N': '26.385'}, 'adx_pos_14': {'N': '15.537'}, 'adx_neg_14': {'N': '29.4931'}, 'zatrm_14': {'N': '0.9708'}, 'atrm': {'N': '0.9708'}, 'eva': {'N': '36.3732'}, 'wally_index_14': {'N': '10'}, 'sx': {'N': '29.0436'}, 'dix': {'N': '-1'}, 'vor': {'N': '1.3964'}}, 
+        {'market#ticker': {'S': 'USA#XNYS#ABT'}, 'frequence#timestamp': {'S': 'DAY#2022-05-16T00:00:00+0000'}, 'name': {'S': 'ABBVIE'}, 'open': {'N': '109.4'}, 'close': {'N': '109.71'}, 'high': {'N': '110.5194'}, 'low': {'N': '107.81'}, 'volume': {'N': '7451946.0'}, 'mfi_14': {'N': '35.96'}, 'rfi_14': {'N': '40.4362'}, 'w_14': {'N': '-63.9972'}, 'atr_14': {'N': '3.2009'}, 'adx_14': {'N': '26.385'}, 'adx_pos_14': {'N': '15.537'}, 'adx_neg_14': {'N': '29.4931'}, 'zatrm_14': {'N': '0.9708'}, 'atrm': {'N': '0.9708'}, 'eva': {'N': '36.3732'}, 'wally_index_14': {'N': '63.6268'}, 'sx': {'N': '29.0436'}, 'dix': {'N': '-1'}, 'vor': {'N': '1.3964'}}
+        ]
+    
+    # print(test)
+    for item in test:
+        print('{} - {} '.format(item['market#ticker'], item['wally_index_14']))
+    
+    print('\n------------------------------\n')
+    test.sort(key=lambda x: x['wally_index_14']['N'], reverse=True)
+    
+    for item in test:
+        print('{} - {} '.format(item['market#ticker'], item['wally_index_14']))
+    
+    #main('', '')

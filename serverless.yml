@@ -75,6 +75,12 @@ provider:
 functions:
   data_collector:
     handler: handler.data_collector
+    events:
+      - schedule:
+          rate: cron(00 06 ? * 2-5 *)
+          enabled: true
+          name: daily-collection
+          description: 'Daily data collection from data source'
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -132,16 +138,16 @@ resources:
     financialDataItems:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: financialDataItems
+        TableName: financialData
         AttributeDefinitions:
-          - AttributeName: market#ticker
+          - AttributeName: market_ticker
             AttributeType: S
-          - AttributeName: frequence#timestamp
+          - AttributeName: frequence_timestamp
             AttributeType: S
         KeySchema:
-          - AttributeName: market#ticker
+          - AttributeName: market_ticker
             KeyType: HASH
-          - AttributeName: frequence#timestamp
+          - AttributeName: frequence_timestamp
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
